@@ -2,7 +2,7 @@ package mikrotik
 
 import (
 	"context"
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent/internal/collector/mikrotik/api"
 )

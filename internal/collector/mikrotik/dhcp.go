@@ -2,6 +2,7 @@ package mikrotik
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent/internal/collector/mikrotik/api"
@@ -187,23 +188,14 @@ func countPoolAddresses(ranges string) int64 {
 }
 
 func splitRanges(s string) []string {
+	parts := strings.Split(s, ",")
 	var ranges []string
-	var current string
-	
-	for _, c := range s {
-		if c == ',' {
-			if current != "" {
-				ranges = append(ranges, current)
-			}
-			current = ""
-		} else if c != ' ' {
-			current += string(c)
+	for _, p := range parts {
+		trimmed := strings.TrimSpace(p)
+		if trimmed != "" {
+			ranges = append(ranges, trimmed)
 		}
 	}
-	if current != "" {
-		ranges = append(ranges, current)
-	}
-	
 	return ranges
 }
 
