@@ -1,0 +1,49 @@
+[Unit]
+Description=ISP Visual Monitor Agent
+Documentation=https://github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ispagent
+Group=ispagent
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/ispagent
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=512
+
+# Environment
+Environment="ISPAGENT_CONFIG=/etc/ispagent/agent.yaml"
+EnvironmentFile=-/etc/default/ispagent
+
+# Main process
+ExecStart=/usr/local/bin/ispagent --config ${ISPAGENT_CONFIG}
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Restart policy
+Restart=always
+RestartSec=10s
+StartLimitBurst=5
+StartLimitInterval=60s
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ispagent
+
+[Install]
+WantedBy=multi-user.target
