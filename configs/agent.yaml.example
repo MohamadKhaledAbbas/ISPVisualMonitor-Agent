@@ -1,0 +1,46 @@
+# ISP Visual Monitor Agent Configuration
+agent:
+  id: ""  # Auto-generated if empty
+  name: "agent-01"
+  
+server:
+  address: "monitor.example.com:443"
+  tls:
+    enabled: true
+    ca_cert: "/etc/ispagent/ca.crt"
+    client_cert: "/etc/ispagent/client.crt"
+    client_key: "/etc/ispagent/client.key"
+    
+license:
+  key: "${LICENSE_KEY}"
+  validation_url: "https://license.ispmonitor.com/v1/validate"
+  offline_grace_hours: 72
+  
+collection:
+  interval_seconds: 60
+  
+routers:
+  - id: "router-01"
+    name: "Core Router"
+    type: "mikrotik"
+    address: "192.168.1.1"
+    credentials:
+      username: "${ROUTER_USER}"
+      password: "${ROUTER_PASS}"
+    collect:
+      system: true
+      interfaces: true
+      pppoe_sessions: true
+      nat_sessions: false
+      dhcp_leases: true
+
+privacy:
+  audit_logging: true
+  audit_log_path: "/var/log/ispagent/audit.log"
+  redact_usernames: false
+  redact_ip_addresses: false
+  
+logging:
+  level: "info"
+  format: "json"
+  output: "/var/log/ispagent/agent.log"

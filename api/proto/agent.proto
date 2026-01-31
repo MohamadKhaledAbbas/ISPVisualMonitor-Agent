@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package ispmonitor.agent.v1;
+
+option go_package = "github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent/api/proto/agentpb";
+
+import "google/protobuf/timestamp.proto";
+import "metrics.proto";
+import "sessions.proto";
+
+// AgentService defines the communication between agent and server
+service AgentService {
+  // Register registers the agent with the server
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  
+  // Heartbeat sends periodic health status
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+  
+  // StreamMetrics sends metrics in a bidirectional stream
+  rpc StreamMetrics(stream MetricsReport) returns (stream MetricsAck);
+  
+  // ReportSessions sends session data (PPPoE, NAT, DHCP)
+  rpc ReportSessions(SessionReport) returns (SessionReportResponse);
+  
+  // GetConfiguration fetches agent configuration from server
+  rpc GetConfiguration(ConfigRequest) returns (ConfigResponse);
+}
+
+message RegisterRequest {
+  string agent_id = 1;
+  string agent_version = 2;
+  string hostname = 3;
+  string os = 4;
+  string arch = 5;
+  repeated string capabilities = 6;
+  string license_key = 7;
+}
+
+message RegisterResponse {
+  bool success = 1;
+  string server_message = 2;
+  int32 poll_interval_seconds = 3;
+  repeated string enabled_collectors = 4;
+}
+
+message HeartbeatRequest {
+  string agent_id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  AgentStatus status = 3;
+}
+
+message HeartbeatResponse {
+  bool acknowledged = 1;
+  repeated Command pending_commands = 2;
+}
+
+message AgentStatus {
+  double cpu_percent = 1;
+  double memory_percent = 2;
+  int64 uptime_seconds = 3;
+  int32 active_collectors = 4;
+  int64 metrics_sent = 5;
+  int64 errors_count = 6;
+}
+
+message Command {
+  string command_id = 1;
+  string type = 2;
+  map<string, string> parameters = 3;
+}
+
+message ConfigRequest {
+  string agent_id = 1;
+  string current_config_version = 2;
+}
+
+message ConfigResponse {
+  bool has_update = 1;
+  string config_version = 2;
+  bytes config_data = 3;
+}
