@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package ispmonitor.agent.v1;
+
+option go_package = "github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent/api/proto/agentpb";
+
+import "google/protobuf/timestamp.proto";
+
+message SessionReport {
+  string agent_id = 1;
+  string router_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  repeated PPPoESession pppoe_sessions = 4;
+  repeated NATSession nat_sessions = 5;
+  repeated DHCPLease dhcp_leases = 6;
+}
+
+message SessionReportResponse {
+  bool success = 1;
+  int32 sessions_processed = 2;
+}
+
+message PPPoESession {
+  string session_id = 1;
+  string username = 2;
+  string calling_station_id = 3;
+  string framed_ip = 4;
+  int64 session_time_seconds = 5;
+  int64 bytes_in = 6;
+  int64 bytes_out = 7;
+  string status = 8;
+  google.protobuf.Timestamp connect_time = 9;
+}
+
+message NATSession {
+  string protocol = 1;
+  string src_address = 2;
+  int32 src_port = 3;
+  string dst_address = 4;
+  int32 dst_port = 5;
+  string translated_address = 6;
+  int32 translated_port = 7;
+  int64 bytes = 8;
+  int64 packets = 9;
+}
+
+message DHCPLease {
+  string mac_address = 1;
+  string ip_address = 2;
+  string hostname = 3;
+  google.protobuf.Timestamp lease_start = 4;
+  google.protobuf.Timestamp lease_end = 5;
+  string status = 6;
+}

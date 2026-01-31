@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package ispmonitor.agent.v1;
+
+option go_package = "github.com/MohamadKhaledAbbas/ISPVisualMonitor-Agent/api/proto/agentpb";
+
+import "google/protobuf/timestamp.proto";
+
+message MetricsReport {
+  string agent_id = 1;
+  string router_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  SystemMetrics system = 4;
+  repeated InterfaceMetrics interfaces = 5;
+  map<string, double> custom_metrics = 6;
+}
+
+message MetricsAck {
+  bool received = 1;
+  string batch_id = 2;
+}
+
+message SystemMetrics {
+  double cpu_percent = 1;
+  double memory_percent = 2;
+  int64 memory_total_bytes = 3;
+  int64 memory_used_bytes = 4;
+  int64 uptime_seconds = 5;
+  double temperature_celsius = 6;
+  string firmware_version = 7;
+  string board_name = 8;
+}
+
+message InterfaceMetrics {
+  string name = 1;
+  string description = 2;
+  bool is_up = 3;
+  int64 speed_mbps = 4;
+  int64 rx_bytes = 5;
+  int64 tx_bytes = 6;
+  int64 rx_packets = 7;
+  int64 tx_packets = 8;
+  int64 rx_errors = 9;
+  int64 tx_errors = 10;
+  int64 rx_drops = 11;
+  int64 tx_drops = 12;
+}

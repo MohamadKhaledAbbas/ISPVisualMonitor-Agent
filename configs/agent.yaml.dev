@@ -1,0 +1,43 @@
+# ISP Visual Monitor Agent - Development Configuration
+agent:
+  id: "dev-agent-001"
+  name: "Development Agent"
+  
+server:
+  address: "localhost:50051"
+  tls:
+    enabled: false
+    
+license:
+  key: "dev-license-key-12345"
+  validation_url: "localhost:50052"
+  offline_grace_hours: 72
+  
+collection:
+  interval_seconds: 30
+  
+routers:
+  - id: "dev-router-01"
+    name: "Development Router"
+    type: "mikrotik"
+    address: "192.168.88.1"
+    credentials:
+      username: "admin"
+      password: "admin"
+    collect:
+      system: true
+      interfaces: true
+      pppoe_sessions: true
+      nat_sessions: false
+      dhcp_leases: true
+
+privacy:
+  audit_logging: true
+  audit_log_path: "./audit.log"
+  redact_usernames: false
+  redact_ip_addresses: false
+  
+logging:
+  level: "debug"
+  format: "text"
+  output: "stdout"
