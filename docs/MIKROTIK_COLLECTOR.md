@@ -66,6 +66,7 @@ routers:
       api:
         port: 8729
         use_tls: true
+        insecure_skip_verify: false  # Set to true only for self-signed certs (not recommended for production)
         timeout: 10s
         retry_attempts: 3
         retry_delay: 1s
@@ -213,11 +214,14 @@ For API over TLS (port 8729, recommended):
 ## Security Best Practices
 
 1. **Use TLS (port 8729)**: Always use API-SSL in production environments
-2. **Minimal Permissions**: Use the `monitoring` group with only `read,api` permissions
-3. **Strong Passwords**: Use environment variables for credentials, never hardcode
-4. **IP Restrictions**: Limit API access to monitoring server IPs only
-5. **Firewall Rules**: Add firewall rules as an additional layer of protection
-6. **Audit Logging**: Enable audit logging to track all data collection events
+2. **Verify Certificates**: Keep `insecure_skip_verify: false` unless using self-signed certs
+3. **Minimal Permissions**: Use the `monitoring` group with only `read,api` permissions
+4. **Strong Passwords**: Use environment variables for credentials, never hardcode
+5. **IP Restrictions**: Limit API access to monitoring server IPs only
+6. **Firewall Rules**: Add firewall rules as an additional layer of protection
+7. **Audit Logging**: Enable audit logging to track all data collection events
+
+**Note on Self-Signed Certificates**: If your RouterOS uses self-signed certificates and you must set `insecure_skip_verify: true`, ensure that network access to the router is strictly controlled via IP restrictions and firewall rules.
 
 ## Troubleshooting
 

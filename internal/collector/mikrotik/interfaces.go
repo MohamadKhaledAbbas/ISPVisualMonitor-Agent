@@ -154,9 +154,6 @@ type ethernetStats struct {
 
 func (c *Collector) getEthernetStats(ctx context.Context, client *api.Client, name string) (*ethernetStats, error) {
 	// Get ethernet interface stats
-	sentence := api.NewSentence("/interface/ethernet/print")
-	sentence.AddQuery("name", name)
-	
 	results, err := client.Run(ctx, "/interface/ethernet/print", map[string]string{
 		".proplist": "name,speed,full-duplex",
 	})

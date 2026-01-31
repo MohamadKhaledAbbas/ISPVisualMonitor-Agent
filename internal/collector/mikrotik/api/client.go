@@ -15,22 +15,24 @@ import (
 
 // ClientConfig contains configuration for the RouterOS API client.
 type ClientConfig struct {
-	Address       string        // Router address (host:port)
-	Username      string        // API username
-	Password      string        // API password
-	UseTLS        bool          // Use TLS connection (port 8729)
-	TLSConfig     *tls.Config   // Custom TLS configuration
-	Timeout       time.Duration // Connection and read/write timeout
-	RetryAttempts int           // Number of retry attempts
-	RetryDelay    time.Duration // Delay between retries
+	Address            string        // Router address (host:port)
+	Username           string        // API username
+	Password           string        // API password
+	UseTLS             bool          // Use TLS connection (port 8729)
+	TLSConfig          *tls.Config   // Custom TLS configuration
+	InsecureSkipVerify bool          // Skip TLS certificate verification (not recommended for production)
+	Timeout            time.Duration // Connection and read/write timeout
+	RetryAttempts      int           // Number of retry attempts
+	RetryDelay         time.Duration // Delay between retries
 }
 
 // DefaultConfig returns a ClientConfig with default values.
 func DefaultConfig() *ClientConfig {
 	return &ClientConfig{
-		Timeout:       10 * time.Second,
-		RetryAttempts: 3,
-		RetryDelay:    time.Second,
+		Timeout:            10 * time.Second,
+		RetryAttempts:      3,
+		RetryDelay:         time.Second,
+		InsecureSkipVerify: false, // Secure by default
 	}
 }
 
@@ -198,7 +200,12 @@ func (c *Client) connect(ctx context.Context) error {
 		tlsConfig := c.config.TLSConfig
 		if tlsConfig == nil {
 			tlsConfig = &tls.Config{
-				InsecureSkipVerify: true, // RouterOS often uses self-signed certs
+				MinVersion: tls.VersionTLS12,
+			}
+			// Only skip verification if explicitly configured
+			// This is sometimes needed for RouterOS self-signed certs
+			if c.config.InsecureSkipVerify {
+				tlsConfig.InsecureSkipVerify = true // #nosec G402 - User explicitly configured insecure mode
 			}
 		}
 		conn, err = tls.DialWithDialer(dialer, "tcp", c.config.Address, tlsConfig)

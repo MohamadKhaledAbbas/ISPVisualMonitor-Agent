@@ -22,11 +22,12 @@ type Config struct {
 
 // APIConfig contains API connection settings.
 type APIConfig struct {
-	Port          int           `yaml:"port"`
-	UseTLS        bool          `yaml:"use_tls"`
-	Timeout       time.Duration `yaml:"timeout"`
-	RetryAttempts int           `yaml:"retry_attempts"`
-	RetryDelay    time.Duration `yaml:"retry_delay"`
+	Port               int           `yaml:"port"`
+	UseTLS             bool          `yaml:"use_tls"`
+	InsecureSkipVerify bool          `yaml:"insecure_skip_verify"` // Skip TLS cert verification (not recommended for production)
+	Timeout            time.Duration `yaml:"timeout"`
+	RetryAttempts      int           `yaml:"retry_attempts"`
+	RetryDelay         time.Duration `yaml:"retry_delay"`
 }
 
 // CollectConfig controls which metrics to collect.

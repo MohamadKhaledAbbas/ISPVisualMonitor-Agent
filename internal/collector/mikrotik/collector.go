@@ -231,13 +231,14 @@ func (c *Collector) createClient(router *models.RouterConfig, cfg *Config) *api.
 	}
 
 	clientConfig := &api.ClientConfig{
-		Address:       fmt.Sprintf("%s:%d", router.Address, port),
-		Username:      router.Credentials.Username,
-		Password:      router.Credentials.Password,
-		UseTLS:        cfg.API.UseTLS,
-		Timeout:       cfg.API.Timeout,
-		RetryAttempts: cfg.API.RetryAttempts,
-		RetryDelay:    cfg.API.RetryDelay,
+		Address:            fmt.Sprintf("%s:%d", router.Address, port),
+		Username:           router.Credentials.Username,
+		Password:           router.Credentials.Password,
+		UseTLS:             cfg.API.UseTLS,
+		InsecureSkipVerify: cfg.API.InsecureSkipVerify,
+		Timeout:            cfg.API.Timeout,
+		RetryAttempts:      cfg.API.RetryAttempts,
+		RetryDelay:         cfg.API.RetryDelay,
 	}
 
 	if clientConfig.Timeout == 0 {

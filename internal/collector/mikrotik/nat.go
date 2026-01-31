@@ -74,7 +74,7 @@ func (c *Collector) collectNAT(ctx context.Context, client *api.Client) ([]NATCo
 		maxConns = 10000
 	}
 
-	for i, conn := range connections {
+	for idx, conn := range connections {
 		// Apply sampling if enabled
 		if c.config.NAT.SamplingEnabled && c.config.NAT.SampleRate < 1.0 {
 			if rand.Float64() > c.config.NAT.SampleRate {
@@ -104,7 +104,7 @@ func (c *Collector) collectNAT(ctx context.Context, client *api.Client) ([]NATCo
 		result = append(result, natConn)
 
 		// Safety check for very large connection tables
-		if i > 100000 {
+		if idx > 100000 {
 			break
 		}
 	}
